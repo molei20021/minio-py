@@ -116,7 +116,8 @@ class Minio:  # pylint: disable=too-many-public-methods
                  secure=True,
                  region=None,
                  http_client=None,
-                 credentials=None):
+                 credentials=None,
+                 headers=None):
         # Validate http client has correct base class.
         if http_client and not isinstance(
                 http_client,
@@ -125,7 +126,7 @@ class Minio:  # pylint: disable=too-many-public-methods
                 "HTTP client should be instance of "
                 "`urllib3.poolmanager.PoolManager`"
             )
-
+        self._headers = headers
         self._region_map = {}
         self._base_url = BaseURL(
             ("https://" if secure else "http://") + endpoint,
@@ -398,7 +399,10 @@ class Minio:  # pylint: disable=too-many-public-methods
     ):
         """Execute HTTP request."""
         region = self._get_region(bucket_name, None)
-
+        if headers == None:
+            headers = {}
+            for key in self._headers.keys():
+                headers[key] = self._headers[key]
         try:
             return self._url_open(
                 method,
