@@ -401,8 +401,8 @@ class Minio:  # pylint: disable=too-many-public-methods
         region = self._get_region(bucket_name, None)
         if headers == None:
             headers = {}
-            for key in self._headers.keys():
-                headers[key] = self._headers[key]
+        for key in self._headers.keys():
+            headers[key] = self._headers[key]
         try:
             return self._url_open(
                 method,
